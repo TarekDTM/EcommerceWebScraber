@@ -27,7 +27,10 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-
+ 'proxy_manager' => [
+        'enabled' => env('PROXY_MANAGER_ENABLED', false),
+        'url' => env('PROXY_MANAGER_URL', 'http://localhost:9090'),
+    ],
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
