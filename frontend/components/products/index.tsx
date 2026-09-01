@@ -67,9 +67,7 @@ export default function Products() {
                     {p.price ?? "--"} <span className="text-base font-medium text-slate-500">EGP</span>
                   </p>
                 </div>
-                <button className="rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-orange-500">
-                  View
-                </button>
+                
               </div>
             </div>
           </article>
