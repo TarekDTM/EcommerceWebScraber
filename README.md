@@ -1,48 +1,54 @@
 # E-commerce Scraper
 
-A full-stack product scraping app with:
-- Laravel backend for scraping, storing, and exposing product data
-- Next.js frontend for the product grid and Jumia scrape form
+A full-stack product scraping demo built with Laravel, Next.js, and a small Go proxy manager.
+
+## Overview
+
+This project lets a user paste a product URL, scrape the page, store the result in MySQL, and view saved products in a responsive product grid.
+
+It includes:
+- Laravel backend for scraping and API endpoints
+- Next.js frontend for product listing and scrape form
 - Go microservice for optional proxy rotation
-- Docker and Makefile helpers for easier local setup
-
-## What this project does
-
-- Lets a user paste a Jumia product URL and scrape it
-- Stores the scraped product in the Laravel database
-- Lists saved products in the frontend
-- Shows the product feed in a polished ecommerce-style grid
-- Supports a reusable selector-based scraper for different sites
+- MySQL database for saved product records
 
 ## Project structure
 
 - `backend/` — Laravel API and scraping logic
-- `frontend/` — Next.js app with the UI
+- `frontend/` — Next.js UI
 - `proxyService/` — Go proxy manager
-- `Makefile` — quick local commands
-- `docker-compose.yml` — local multi-container setup
 
-## Stack
+## Tech stack
 
-- Backend: Laravel 13 + PHP 8.3
-- Frontend: Next.js + React + TypeScript + TanStack Query
-- Proxy: Go standard library HTTP service
-- Database: MySQL (or SQLite for quick local testing if adjusted)
+- Backend: Laravel + PHP
+- Frontend: Next.js + React + TypeScript
+- Data fetching: TanStack Query
+- Database: MySQL
+- Proxy service: Go standard library HTTP server
 
 ## Features
 
-- Jumia URL input form on the home page
-- Scrape now action with React Query mutation
-- List scrapes button that navigates to the products page
-- Product cards with title, price, image, and source link
-- Query-based product loading using the same shared fetch flow as the products page
-- Optional proxy manager integration via Laravel config
-- Docker support for running the app as a stack
+- Paste a product URL from a storefront such as Jumia
+- Scrape product title, price, and image using selector-based logic
+- Store scraped records in the database
+- List products via a Laravel API
+- View product cards in a polished ecommerce-style grid
+- Refresh product data on the frontend
+- Optional proxy service for rotating requests through a proxy pool
 
-## Local setup
+## Prerequisites
 
+Make sure the following are installed:
+- PHP
+- Composer
+- Node.js
+- pnpm
+- MySQL
+- Go
 
-#### 1) Backend
+## Backend setup
+
+From the project root:
 
 ```bash
 cd backend
@@ -53,37 +59,49 @@ php artisan migrate
 php artisan serve
 ```
 
+The Laravel app will run on:
+
+```bash
+http://127.0.0.1:8000
+```
+
 API base URL:
 
 ```bash
 http://127.0.0.1:8000/api
 ```
 
-#### 2) Frontend
+## Frontend setup
+
+From the project root:
 
 ```bash
 cd frontend
 pnpm install
-cp .env.example .env.development
+cp .env.example .env.local
 pnpm dev
 ```
 
-Env:
+Example frontend env:
 
 ```env
 NEXT_PUBLIC_API_URL=http://127.0.0.1:8000/api
 ```
 
-Frontend URL:
+The frontend will run on:
 
 ```bash
 http://localhost:3000
 ```
 
-#### 3) Proxy service
+## Proxy service setup
+
+The Go proxy service is optional and disabled by default for local testing.
+
+From the project root:
 
 ```bash
-cd proxyService
+cd proxyService/cmd
 go run .
 ```
 
@@ -93,57 +111,34 @@ The proxy service runs on:
 http://localhost:9090
 ```
 
-Proxying is optional. If you are not using real proxies, keep it disabled in Laravel config.
+If you want to enable it in Laravel, set:
 
-## Laravel proxy config
-
-In [backend/config/services.php](backend/config/services.php), the proxy manager is controlled by:
-
-```php
-'proxy_manager' => [
-    'enabled' => env('PROXY_MANAGER_ENABLED', false),
-    'url' => env('PROXY_MANAGER_URL', 'http://localhost:9090'),
-],
+```env
+PROXY_MANAGER_ENABLED=true
+PROXY_MANAGER_URL=http://localhost:9090
 ```
 
-This is off by default for local testing.
+If you want to configure proxy entries in Go, edit the default list in `proxyService/cmd/main.go`.
 
 ## Main API routes
 
 - `GET /api/products`
 - `POST /api/products/scrape`
 
-## Docker
+## Quick start
 
-You can run the full stack with Docker Compose:
-
-```bash
-docker compose up --build
-```
-
-This starts:
-- Laravel backend on `http://localhost:8000`
-- Next.js frontend on `http://localhost:3000`
-- Go proxy service on `http://localhost:9090`
-- MySQL database on `localhost:3306`
-
-## Notes
-
-- The scraper is selector-based and designed to work with different storefronts by passing XPath selectors.
-- Jumia and similar sites can block scrapers or change markup often, so selectors may need updates.
-- For local testing, use a legal or controlled target page instead of a site that actively blocks automation.
-- The app is built as a demo/prototype architecture, not a production scraping system.
-
-## Quick run order
+Run all services in separate terminals:
 
 ```bash
 cd backend && php artisan serve
-cd proxyService && go run .
+cd proxyService/cmd && go run .
 cd frontend && pnpm dev
 ```
 
-Or:
+## Notes
 
-```bash
-make dev
-```
+- This is a demo/prototype architecture, not a production scraping system.
+- Scraping real ecommerce sites can fail due to anti-bot protection or markup changes.
+- The scraper is selector-based and should be adjusted for the target site if needed.
+- Proxy support is included as an optional layer and is intended to be used with a real proxy pool or proxy manager. The default local setup is disabled and uses direct scraping unless a valid proxy service is configured.
+

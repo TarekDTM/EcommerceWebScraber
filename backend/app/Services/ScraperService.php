@@ -62,6 +62,30 @@ class ScraperService
         }
     }
 
+    protected function reportProxyStatus(string $proxy, bool $healthy): void
+    {
+        if (!config('services.proxy_manager.enabled')) {
+            return;
+        }
+
+        try {
+            $base = config('services.proxy_manager.url', 'http://localhost:9090');
+            $this->client->post("{$base}/proxies/report", [
+                'timeout' => 3,
+                'json' => [
+                    'proxy' => $proxy,
+                    'healthy' => $healthy,
+                ],
+            ]);
+        } catch (GuzzleException $e) {
+            Log::warning('Failed to report proxy health to proxy manager', [
+                'proxy' => $proxy,
+                'healthy' => $healthy,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
     /**
      * Fetch a product page and extract title/price/image using XPath
      * selectors supplied by the caller, since markup differs per site.
@@ -88,6 +112,10 @@ class ScraperService
             $html = (string) $response->getBody();
         } catch (GuzzleException $e) {
             Log::error("Failed to fetch {$url}: {$e->getMessage()}");
+
+            if (!empty($proxy)) {
+                $this->reportProxyStatus($proxy, false);
+            }
 
             return null;
         }

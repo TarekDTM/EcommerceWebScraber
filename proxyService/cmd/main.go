@@ -29,9 +29,6 @@ type config struct {
 	port    int
 	env     string
 	proxies []string
-	cors    struct {
-		trustedOrigins []string
-	}
 }
 
 // application bundles the config plus anything handlers need to do their
@@ -77,7 +74,7 @@ func loadConfig() config {
 
 	cfg.port = envInt("PORT", 9090)
 	cfg.env = envString("ENV", "development")
-
+	// add your proxies
 	cfg.proxies = []string{
 		"http://proxy1.example.com:8080",
 		"http://proxy2.example.com:8080",
@@ -85,11 +82,6 @@ func loadConfig() config {
 	}
 	if list := os.Getenv("PROXY_LIST"); list != "" {
 		cfg.proxies = splitAndTrim(list, ",")
-	}
-
-	cfg.cors.trustedOrigins = []string{"http://localhost:3000"}
-	if origins := os.Getenv("CORS_TRUSTED_ORIGINS"); origins != "" {
-		cfg.cors.trustedOrigins = splitAndTrim(origins, ",")
 	}
 
 	return cfg
