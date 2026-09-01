@@ -54,14 +54,9 @@ export default function Products() {
             </div>
 
             <div className="flex flex-col gap-3 p-5">
-              <div className="flex items-center justify-between gap-2">
-                <span className="rounded-full bg-orange-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-orange-700">
-                  Top pick
-                </span>
-                <span className="text-xs font-medium text-slate-400">#{p.id}</span>
-              </div>
+         
 
-              <h2 className="line-clamp-2 min-h-14 text-lg font-semibold leading-snug text-slate-800">
+              <h2 className="line-clamp-2  text-lg font-semibold leading-snug text-slate-800">
                 {p.title}
               </h2>
 

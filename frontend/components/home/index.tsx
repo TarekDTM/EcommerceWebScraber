@@ -68,8 +68,8 @@ export default function Home() {
           </button>
         </header>
 
-        <div className="grid gap-6 lg:grid-cols-[1.4fr_0.9fr]">
-          <section className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="grid gap-6">
+          <section className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm ">
             <label htmlFor="jumia-link" className="mb-2 block text-sm font-medium text-slate-700">
               Jumia product URL
             </label>
