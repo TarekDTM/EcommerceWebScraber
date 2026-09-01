@@ -126,12 +126,22 @@ class ScraperService
 
             $node = $nodes->item(0);
 
-            // If the selector targets an <img>, prefer its src attribute.
-            if ($node instanceof \DOMElement && $node->tagName === 'img') {
-                return $node->getAttribute('src');
+            if ($node instanceof \DOMAttr) {
+                return trim($node->value);
             }
 
-            return trim($node->textContent);
+            if ($node instanceof \DOMElement) {
+                if ($node->tagName === 'img') {
+                    $src = $node->getAttribute('src');
+                    if ($src !== '') return $src;
+
+                    return $node->getAttribute('data-src');
+                }
+
+                return trim($node->textContent);
+            }
+
+            return null;
         };
 
         return [
@@ -141,7 +151,7 @@ class ScraperService
         ];
     }
 
-    protected function normalizePrice(?string $raw): ?float
+    function normalizePrice(?string $raw): ?float
     {
         if ($raw === null) {
             return null;
