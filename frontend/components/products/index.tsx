@@ -2,6 +2,7 @@
 "use client";
 
 import { fetchProducts } from "@/APIRequests/requests";
+import { Product } from "@/Utils/types/products/type";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 export default function Products() {
@@ -17,8 +18,17 @@ export default function Products() {
 
   return (
     <div>
-      {products.map((p: any) => (
-        <div key={p.id}>{p.title}</div>
+      {products.map((p: Product) => (
+
+        <div key={p.id}>
+          <img  src={p.image_url}/>
+          <h1>
+            {p.title}
+          </h1>
+          <h4>
+            {p.price}
+          </h4>
+        </div>
       ))}
     </div>
   );

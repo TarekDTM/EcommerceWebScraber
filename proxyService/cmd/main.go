@@ -18,7 +18,7 @@ import (
 	"strings"
 	"time"
 
-	"scraberService/internal/data"
+	"proxyService/internal/data"
 )
 
 // config holds everything that can be tuned per-environment. Keeping it as
