@@ -48,8 +48,8 @@ export default function Products() {
             <div className="relative overflow-hidden bg-slate-100">
               <img
                 className="h-72 w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                src={p.image_url}
-                alt={p.title}
+                src={p.image_url || "https://placehold.co/600x400?text=No+Image"}
+                alt={p.title || "Scraped product"}
               />
             </div>
 
